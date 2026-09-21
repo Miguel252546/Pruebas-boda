@@ -1,0 +1,8 @@
+# Guía local de modificaciones visuales
+GUIA_MODIFICACIONES_VISUALES.md
+
+# Carpeta local de problemas
+problemas/
+
+# Configuración local de Visual Studio Code
+.vscode/

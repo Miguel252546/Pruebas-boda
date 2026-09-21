@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitación de Boda - Yda & Emi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
+    <link rel="stylesheet" href="styles.css?v=8">
+    <link rel="stylesheet" href="gallery.css">
+    <!-- ══ Módulos del Opening ══ -->
+    <script src="modules/event-bus.js"></script>
+    <script src="modules/performance-manager.js"></script>
+    <script src="modules/animation-controller.js"></script>
+    <script src="modules/canvas-renderer.js"></script>
+    <script src="modules/particle-engine.js"></script>
+    <script src="modules/audio-manager.js"></script>
+    <script src="modules/opening-engine.js"></script>
+    <script src="modules/app-controller.js"></script>
+</head>
+
+<body>
+    <!-- ══ FONDO MÁGICO: pétalos + bokeh dorado (detrás de todo) ══ -->
+    <div class="magic-bg" aria-hidden="true">
+        <div class="magic-petals" id="magicPetals"></div>
+        <div class="magic-bokeh" id="magicBokeh"></div>
+        <div class="magic-stars" id="magicStars"></div>
+    </div>
+
+    <!----- ══ COMPONENTE: AMBIENTE-FX ══ -->
+    <div class="poke-opening" id="pokeOpening">
+        <div class="poke-flash" id="pokeFlash"></div>
+        <div class="poke-light-lines" id="pokeLightLines">
+            <div class="poke-light-line"></div>
+            <div class="poke-light-line"></div>
+            <div class="poke-light-line"></div>
+        </div>
+
+        <!-- Nuevas capas decorativas (detrás de canvas, tarjeta y Pokéball) -->
+        <div class="poke-aura" aria-hidden="true"></div>
+        <div class="poke-rays" id="pokeRays" aria-hidden="true"></div>
+        <div class="poke-stars" id="pokeStars" aria-hidden="true"></div>
+        <div class="poke-bokeh" id="pokeBokeh" aria-hidden="true"></div>
+        <div class="poke-orbit" id="pokeOrbit" aria-hidden="true"></div>
+        <div class="poke-hearts-up" id="pokeHeartsUp" aria-hidden="true"></div>
+
+        <canvas id="pokeSky"></canvas>
+        <canvas id="pokeHearts"></canvas>
+        <div class="poke-bg-layer" id="pokeBgLayer"></div>
+        <!-- ══ FIN COMPONENTE: AMBIENTE-FX ══ -->
+
+        <!-- ══ COMPONENTE: ESCENA-CARD — POKEBALL ══ -->
+        <div class="poke-scene pb-scene" id="pbScene">
+            <div class="poke-card">
+                <div class="poke-eyebrow">Toca la PokeBall</div>
+                <div class="poke-rule"></div>
+
+                <div class="poke-stage" id="pokeStage">
+                    <div class="pokeball-halo"></div>
+
+                    <!-- ══ COMPONENTE: POKEBALL ══ -->
+                    <div class="pokeball-section">
+                        <div class="pokeball-wrap" id="pokeBallWrap">
+                            <div class="pokeball-e-ring"></div>
+                            <div class="pokeball-e-ring"></div>
+                            <div class="pokeball-e-ring"></div>
+                            <div class="pokeball-body">
+                                <div class="pokeball-half pokeball-h-top">
+                                    <div class="pokeball-fill"></div>
+                                </div>
+                                <div class="pokeball-band"></div>
+                                <div class="pokeball-btn"></div>
+                                <div class="pokeball-half pokeball-h-bot">
+                                    <div class="pokeball-fill"></div>
+                                </div>
+                            </div>
+                            <div class="pokeball-p-layer" id="pokePLayer"></div>
+                        </div>
+                    </div>
+                    <!-- ══ FIN COMPONENTE: POKEBALL ══ -->
+                </div>
+            </div>
+        </div>
+        <!-- ══ FIN COMPONENTE: ESCENA-CARD — POKEBALL ══ -->
+
+        <!-- ══ COMPONENTE: ESCENA-CARD — ANILLO ══ -->
+        <div class="poke-scene ring-scene" id="ringScene">
+            <div class="poke-card">
+                <div class="poke-stage">
+                    <!-- ══ COMPONENTE: ANILLO ══ -->
+                    <div class="ring-wrap" id="pokeRing">
+                        <div class="ring-float">
+                            <svg width="148" height="172" viewBox="0 0 148 172" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="gBandP" x1="0" y1="0" x2="1" y2="0">
+                                        <stop offset="0%" stop-color="#3e2406" />
+                                        <stop offset="50%" stop-color="#ecd050" />
+                                        <stop offset="100%" stop-color="#3e2406" />
+                                    </linearGradient>
+                                    <linearGradient id="gDTP" x1=".3" y1="0" x2=".7" y2="1">
+                                        <stop offset="0%" stop-color="#ffffff" />
+                                        <stop offset="100%" stop-color="#88c0e0" />
+                                    </linearGradient>
+                                    <filter id="fGP" x="-55%" y="-55%" width="210%" height="210%">
+                                        <feGaussianBlur stdDeviation="2.8" result="b" />
+                                        <feMerge>
+                                            <feMergeNode in="b" />
+                                            <feMergeNode in="SourceGraphic" />
+                                        </feMerge>
+                                    </filter>
+                                    <clipPath id="cLP">
+                                        <rect x="0" y="84" width="148" height="88" />
+                                    </clipPath>
+                                </defs>
+                                <ellipse cx="74" cy="165" rx="32" ry="7" fill="rgba(0,0,0,.28)" filter="url(#fGP)" />
+                                <circle cx="74" cy="112" r="38" stroke="#2e1804" stroke-width="15" fill="none" />
+                                <circle cx="74" cy="112" r="38" stroke="url(#gBandP)" stroke-width="15" fill="none"
+                                    clip-path="url(#cLP)" />
+                                <rect x="56" y="70" width="36" height="11" rx="3.5" fill="#9c6c0c" filter="url(#fGP)" />
+                                <path d="M60 70 Q57 56 54 42" stroke="#c88c18" stroke-width="2.6" fill="none"
+                                    stroke-linecap="round" />
+                                <path d="M74 68 Q74 54 74 39" stroke="#dcac20" stroke-width="2.6" fill="none"
+                                    stroke-linecap="round" />
+                                <path d="M88 70 Q91 56 94 42" stroke="#c88c18" stroke-width="2.6" fill="none"
+                                    stroke-linecap="round" />
+                                <polygon points="74,86 56,70 92,70" fill="#2464a4" filter="url(#fGP)" opacity=".82" />
+                                <polygon points="74,86 56,70 49,46 74,37" fill="#b4e2ff" />
+                                <polygon points="74,86 92,70 99,46 74,37" fill="#e2f5ff" />
+                                <polygon points="74,37 49,46 59,59 89,59 99,46" fill="url(#gDTP)" filter="url(#fGP)" />
+                                <ellipse cx="66" cy="47" rx="7" ry="4" fill="rgba(255,255,255,.75)"
+                                    transform="rotate(-22,66,47)" filter="url(#fGP)" />
+                            </svg>
+                        </div>
+                    </div>
+                    <!-- ══ FIN COMPONENTE: ANILLO ══ -->
+                </div>
+
+                <!-- ══ COMPONENTE: PROPUESTA-CTA ══ -->
+                <div class="poke-proposal" id="pokeProposal">
+                    <div class="poke-p-question">Acompañanos En Este Viaje</div>
+                    <div class="poke-p-sub"></div>
+                    <button class="poke-yes-btn" id="pokeYesBtn">Presiona Acá</button>
+                </div>
+                <!-- ══ FIN COMPONENTE: PROPUESTA-CTA ══ -->
+
+                <!-- ══ COMPONENTE: HINT ══ -->
+                <div class="poke-hint" id="pokeHint"></div>
+                <!-- ══ FIN COMPONENTE: HINT ══ -->
+            </div>
+        </div>
+        <!-- ══ FIN COMPONENTE: ESCENA-CARD — ANILLO ══ -->
+
+        <!-- ══ COMPONENTE: MUSIC-BTN ══ -->
+        <button class="poke-music-btn" id="pokeMusicBtn" data-tip="Música">
+            <svg class="poke-ico" viewBox="0 0 24 24">
+                <path d="M9 18V5l12-2v13" stroke-width="1.6" stroke="currentColor" fill="none" stroke-linecap="round" />
+                <circle cx="6" cy="18" r="3" fill="currentColor" />
+                <circle cx="18" cy="16" r="3" fill="currentColor" />
+            </svg>
+            <div class="poke-waves">
+                <div class="poke-wb"></div>
+                <div class="poke-wb"></div>
+                <div class="poke-wb"></div>
+                <div class="poke-wb"></div>
+                <div class="poke-wb"></div>
+            </div>
+        </button>
+        <!-- ══ FIN COMPONENTE: MUSIC-BTN ══ -->
+    </div>
+
+    <audio id="bgMusic" loop>
+        <source src="./Video + musica/Ricchi E Poveri  Sara Perche Ti Amo (Testo _ Lyrics).m4a" type="audio/mpeg">
+    </audio>
+
+    <main class="main-content" id="mainContent">
+        <!-- Hero Section -->
+        <section class="hero" id="hero">
+            <div class="hero-bg">
+                <div class="hero-overlay"></div>
+                <div class="hero-image"></div>
+                <div class="hero-particles" id="heroParticles"></div>
+                <div class="hero-rays">
+                    <div class="ray"></div>
+                    <div class="ray"></div>
+                    <div class="ray"></div>
+                </div>
+            </div>
+            <div class="hero-content">
+                <p class="hero-subtitle">Estamos preparando todo para recibirte</p>
+                <div class="hero-names">
+                    <span class="name">Yda</span>
+                    <span class="amp">y</span>
+                    <span class="name">Emi</span>
+                </div>
+                <div class="hero-date-row">
+                    <span class="line"></span>
+                    <span class="date">15 de Mayo, 2027</span>
+                    <span class="line"></span>
+                </div>
+                <div class="hero-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Salón Bolgheri</span>
+                </div>
+                <a href="#rsvp" class="hero-btn">
+                    <span>Ver Invitación</span>
+                    <i class="fas fa-chevron-down"></i>
+                </a>
+            </div>
+            <div class="scroll-hint">
+                <div class="scroll-line"></div>
+            </div>
+        </section>
+
+        <!-- Opening -->
+        <section class="section opening" id="opening">
+            <div class="section-particles" id="openingParticles"></div>
+            <div class="container">
+                <div class="opening-inner">
+                    <div class="deco-line">
+                        <span></span>
+                        <i class="fas fa-heart"></i>
+                        <span></span>
+                    </div>
+                    <p class="opening-text">
+                        ¡Llegó el día! Dicen que el amor es una locura, y nosotros decidimos compartirla para siempre.
+                        Ya tenemos todo listo: el amor, los anillos y las ganas de festejar. Solo nos faltas tú para que
+                        esta noche sea perfecta. ¡Prepárate para celebrar, bailar y brindar con nosotros!
+                    </p>
+                    <div class="names-line">
+                        <span>Yda</span>
+                        <span class="and">y</span>
+                        <span>Emi</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider" aria-hidden="true"></div>
+
+        <!-- Countdown -->
+        <section class="section countdown" id="countdown">
+            <div class="countdown-particles" id="countdownParticles"></div>
+            <div class="container">
+                <h2 class="section-title light">Falta poco para el gran día</h2>
+                <div class="countdown-grid">
+                    <div class="count-box">
+                        <div class="count-glow"></div>
+                        <span class="count-num" id="days">00</span>
+                        <span class="count-label">Días</span>
+                    </div>
+                    <span class="count-sep">:</span>
+                    <div class="count-box">
+                        <div class="count-glow"></div>
+                        <span class="count-num" id="hours">00</span>
+                        <span class="count-label">Horas</span>
+                    </div>
+                    <span class="count-sep">:</span>
+                    <div class="count-box">
+                        <div class="count-glow"></div>
+                        <span class="count-num" id="minutes">00</span>
+                        <span class="count-label">Minutos</span>
+                    </div>
+                    <span class="count-sep">:</span>
+                    <div class="count-box">
+                        <div class="count-glow"></div>
+                        <span class="count-num" id="seconds">00</span>
+                        <span class="count-label">Segundos</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider" aria-hidden="true"></div>
+
+        <!-- Gallery -->
+        <section class="section gallery" id="gallery">
+            <div class="container">
+                <h2 class="section-title light">Nuestros momentos</h2>
+                <div class="gallery-grid" id="dynamic-gallery">
+
+                </div>
+            </div>
+        </section>
+        
+        <div class="section-divider" aria-hidden="true"></div>
+
+        <!-- Video -->
+        <section id="video" class="video section-padding">
+            <div class="section-background"></div>
+            <div class="container">
+                <h2 class="section-title light reveal-fade">Nuestro Video</h2>
+                <div class="video-wrapper reveal-scale">
+                    <!-- Overlay con botón play -->
+                    <div class="video-overlay" id="videoOverlay">
+                        <div class="video-play-btn">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <p>Reproducir Video</p>
+                    </div>
+                    <!-- Video (se cargará al hacer click) -->
+                    <video id="bgVideo" controls playsinline crossorigin="anonymous" preload="metadata">
+                        <source src="./Video + musica/reel save Y&E.mp4"
+                            type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider" aria-hidden="true"></div>
+
+        <!-- Details -->
+        <section id="detalles" class="detalles">
+            <div class="section-background"></div>
+            <div class="container">
+                <h2 class="section-title reveal-fade">Detalles del Evento</h2>
+
+                <div class="detalles-grid">
+                    <div class="detalle-card reveal-fade" data-delay="0">
+                        <div class="detalle-icon">
+                            <i class="far fa-calendar"></i>
+                        </div>
+                        <h3>Fecha del Evento</h3>
+                        <p>15 de Mayo de 2027</p>
+                    </div>
+
+                    <div class="detalle-card reveal-fade" data-delay="100">
+                        <div class="detalle-icon">
+                            <i class="far fa-clock"></i>
+                        </div>
+                        <h3>Hora del Evento</h3>
+                        <p>18:00 horas</p>
+                    </div>
+
+                    <div class="detalle-card reveal-fade" data-delay="200">
+                        <div class="detalle-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <h3>Lugar del Evento</h3>
+                        <p>Salón Bolgheri</p>
+                        <p class="direccion">Santiago Derqui 703, X5105 Villa Allende, Córdoba</p>
+                        <a href="https://maps.google.com/?q=Salón+Bolgheri+Córdoba" target="_blank" class="detalle-btn">
+                            <i class="fas fa-external-link-alt"></i>
+                            Ver en Google Maps
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider" aria-hidden="true"></div>
+
+        <!-- Vestimenta -->
+        <section id="vestimenta" class="vestimenta">
+            <div class="container">
+                <h2 class="section-title">Vestimenta</h2>
+                <p class="vestimenta-intro">Queridos invitados, les compartimos el código de etiqueta para brillar
+                    juntos en nuestra noche especial:</p>
+                <div class="vestimenta-grid">
+                    <div class="vestimenta-card">
+                        <div class="vestimenta-icon">
+                            <i class="fas fa-female"></i>
+                        </div>
+                        <h3>La Novia</h3>
+                        <p>El blanco está reservado exclusivamente para la novia</p>
+                    </div>
+                    <div class="vestimenta-card">
+                        <div class="vestimenta-icon">
+                            <i class="fas fa-ring"></i>
+                        </div>
+                        <h3>Damas de Honor</h3>
+                        <p>Azul: El color oficial de las damas de honor</p>
+                    </div>
+                    <div class="vestimenta-card">
+                        <div class="vestimenta-icon">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <h3>Damas y Caballeros</h3>
+                        <p>¡Es su momento de brillar! Exceptuando el blanco y el azul, queremos que lo den todo con sus
+                            mejores looks. ¡A vernos divinos!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider" aria-hidden="true"></div>
+
+        <!-- Precio de la Tarjeta -->
+        <section id="precio-tarjeta" class="section precio-tarjeta">
+            <div class="container">
+                <h2 class="section-title light">Costo de la Tarjeta</h2>
+                <div class="regalo-card">
+                    <div class="regalo-icon">
+                        <i class="fas fa-ticket-alt"></i>
+                    </div>
+                    <p class="regalo-texto">
+                        Tu presencia es lo más importante para nosotros. Para la logística del evento, el costo de la
+                        tarjeta por persona es de <strong>$120.000</strong>.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider" aria-hidden="true"></div>
+
+        <!-- Regalos -->
+        <!--         <section id="regalos" class="section regalos">
+            <div class="container">
+                <h2 class="section-title light">Mesa de Regalos</h2>
+                <div class="regalo-card">
+                    <div class="regalo-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <p class="regalo-texto">
+                        Lo más importante para nosotros es que puedas acompañarnos ese día, que bailemos hasta que los pies no den más y que celebremos el amor con todos los que queremos. Eso es lo que realmente nos llena el corazón. <br><br>
+                        Pero... seamos sinceros, ¡estos hoteles de luna de miel tienen unos precios que asustan! Y como no queremos que nuestra primera discusión de casados sea por el presupuesto del viaje, cualquier ayuda es más que bienvenida para nuestro fondo de 'Aventuras y Supervivencia Matrimonial'. ¡Te lo agradeceremos infinitamente!
+                    </p>
+                    <div class="regalo-datos" style="margin-top: 20px; font-family: var(--font-body); color: var(--navy); font-size: 1.1rem; text-align: center;">
+                        <p><strong>CBU:</strong> [Insertar CBU aquí]</p>
+                        <p><strong>Alias:</strong> [Insertar Alias aquí]</p>
+                    </div>
+                </div>
+            </div>
+        </section> -->
+
+        <div class="section-divider" aria-hidden="true"></div>
+
+        <!-- RSVP -->
+        <section class="section rsvp" id="rsvp">
+            <div class="rsvp-particles" id="rsvpParticles"></div>
+            <div class="container">
+                <div class="rsvp-box">
+                    <div class="rsvp-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h2 class="rsvp-question">Acompañanos en este Dia</h2>
+                    <p class="rsvp-text">Tu presencia será el mejor regalo para nosotros.</p>
+                    <a href="https://forms.google.com/rsvp-wedding" target="_blank" class="rsvp-btn">
+                        <span>Confirmar Asistencia</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider" aria-hidden="true"></div>
+
+        <!-- Footer -->
+        <footer class="site-footer" role="contentinfo" aria-labelledby="footer-title">
+            <h2 id="footer-title" class="sr-only">Información del sitio</h2>
+
+            <div class="footer-container">
+                <!-- Columna 1: Contacto -->
+                <section class="footer-col footer-contact" aria-labelledby="footer-contact-title">
+                    <h3 id="footer-contact-title" class="footer-title">
+                        <i class="fa-solid fa-address-book" aria-hidden="true"></i>
+                        Contacto
+                    </h3>
+
+                    <address class="footer-address">
+                        <ul class="footer-list">
+                            <li class="footer-item">
+                                <a href="mailto:miguelzambrano20144@gmail.com" class="footer-link"
+                                    aria-label="Enviar correo a miguelzambrano20144@gmail.com">
+                                    <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+                                    <span>miguelzambrano20144@gmail.com</span>
+                                </a>
+                            </li>
+                            <li class="footer-item">
+                                <a href="tel:+5491122334455" class="footer-link"
+                                    aria-label="Llamar al +54 9 11 2233 4455">
+                                    <i class="fa-solid fa-phone" aria-hidden="true"></i>
+                                    <span>+54 9 3518 7354 65</span>
+                                </a>
+                            </li>
+                            <!--                             <li class="footer-item">
+                                <a href="https://maps.google.com/?q=Av+Principal+123" target="_blank" rel="noopener" class="footer-link" aria-label="Abrir ubicación en Google Maps (se abre en una pestaña nueva)">
+                                    <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                                    <span>Av. Principal 123, CABA, Argentina</span>
+                                </a>
+                            </li> -->
+                        </ul>
+                    </address>
+                </section>
+
+                <!-- Columna 2: Redes sociales -->
+                <section class="footer-col footer-social" aria-labelledby="footer-social-title">
+                    <h3 id="footer-social-title" class="footer-title">
+                        <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
+                        Redes sociales
+                    </h3>
+
+                    <div class="footer-social-groups">
+
+                        <!-- Fila superior: Novia + Novio lado a lado -->
+                        <div class="footer-social-row">
+                            <!-- Grupo: Novia -->
+                            <div class="footer-social-group" aria-labelledby="footer-social-bride">
+                                <p id="footer-social-bride" class="footer-social-name">
+                                    <i class="fa-solid fa-heart" aria-hidden="true"></i>
+                                    Novia <span class="footer-social-handle">Yda</span>
+                                </p>
+                                <ul class="footer-social-list" role="list">
+                                    <!--                                     <li>
+                                        <a href="#" target="_blank" rel="noopener" class="social-link social-facebook" aria-label="Facebook de la novia (se abre en una pestaña nueva)">
+                                            <i class="fa-brands fa-facebook-f" aria-hidden="true"></i>
+                                        </a>
+                                    </li> -->
+                                    <li>
+                                        <a href="#" target="_blank" rel="noopener" class="social-link social-instagram"
+                                            aria-label="Instagram de la novia (se abre en una pestaña nueva)">
+                                            <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                    <!--                                     <li>
+                                        <a href="#" target="_blank" rel="noopener" class="social-link social-whatsapp" aria-label="WhatsApp de la novia (se abre en una pestaña nueva)">
+                                            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" target="_blank" rel="noopener" class="social-link social-tiktok" aria-label="TikTok de la novia (se abre en una pestaña nueva)">
+                                            <i class="fa-brands fa-tiktok" aria-hidden="true"></i>
+                                        </a>
+                                    </li> -->
+                                </ul>
+                            </div>
+
+                            <!-- Separador vertical sutil -->
+                            <span class="footer-social-divider" aria-hidden="true"></span>
+
+                            <!-- Grupo: Novio -->
+                            <div class="footer-social-group" aria-labelledby="footer-social-groom">
+                                <p id="footer-social-groom" class="footer-social-name">
+                                    <i class="fa-solid fa-ring" aria-hidden="true"></i>
+                                    Novio <span class="footer-social-handle">Emi</span>
+                                </p>
+                                <ul class="footer-social-list" role="list">
+                                    <!--                                     <li>
+                                        <a href="#" target="_blank" rel="noopener" class="social-link social-facebook" aria-label="Facebook del novio (se abre en una pestaña nueva)">
+                                            <i class="fa-brands fa-facebook-f" aria-hidden="true"></i>
+                                        </a>
+                                    </li> -->
+                                    <li>
+                                        <a href="#" target="_blank" rel="noopener" class="social-link social-instagram"
+                                            aria-label="Instagram del novio (se abre en una pestaña nueva)">
+                                            <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                    <!-- <li>
+                                        <a href="https://wa.me/5493571639188?text=Hola%20Yda%2C%20quiero%20consultarte%20algo%20sobre%20la%20boda" target="_blank" rel="noopener" class="social-link social-whatsapp" aria-label="WhatsApp del novio (se abre en una pestaña nueva)">
+                                            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+                                        </a>
+                                    </li> -->
+                                    <!--                                     <li>
+                                        <a href="#" target="_blank" rel="noopener" class="social-link social-tiktok" aria-label="TikTok del novio (se abre en una pestaña nueva)">
+                                            <i class="fa-brands fa-tiktok" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                </ul> -->
+                            </div>
+                        </div>
+
+                        <!-- Separador horizontal sutil -->
+                        <span class="footer-social-divider-h" aria-hidden="true"></span>
+
+                        <!-- Fila inferior: Creador centrado, ancho completo -->
+                        <div class="footer-social-group footer-social-dev" aria-labelledby="footer-social-dev">
+                            <p id="footer-social-dev" class="footer-social-name">
+                                <i class="fa-solid fa-code" aria-hidden="true"></i>
+                                Creador De La Pagina
+                            </p>
+                            <div class="footer-social-dev-row">
+                                <ul class="footer-social-list" role="list">
+                                    <li>
+                                        <a href="#" target="_blank" rel="noopener" class="social-link social-github"
+                                            aria-label="GitHub del creador (se abre en una pestaña nueva)">
+                                            <i class="fa-brands fa-github" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" target="_blank" rel="noopener" class="social-link social-linkedin"
+                                            aria-label="LinkedIn del creador (se abre en una pestaña nueva)">
+                                            <i class="fa-brands fa-linkedin-in" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" target="_blank" rel="noopener" class="social-link social-instagram"
+                                            aria-label="Instagram del creador (se abre en una pestaña nueva)">
+                                            <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="https://wa.me/5491122334455" target="_blank" rel="noopener"
+                                            class="social-link social-whatsapp"
+                                            aria-label="WhatsApp del creador (se abre en una pestaña nueva)">
+                                            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <img src="./Video%20+%20musica/snolax.jpg" alt="Snolax" class="footer-creator-img"
+                                    onerror="this.style.display='none'">
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+            </div>
+
+            <div class="footer-bottom">
+                <p class="footer-copyright">2027 Nace una nueva union</p>
+            </div>
+        </footer>
+
+        <!-- Floating Buttons -->
+        <div class="float-btns">
+            <button class="float-btn music-btn" id="musicBtn">
+                <i class="fas fa-music" id="musicIcon"></i>
+                <div class="btn-wave"></div>
+            </button>
+            <!-- <div class="float-dropdown">
+                <button class="float-btn whatsapp-btn" id="whatsappBtn">
+                    <i class="fab fa-whatsapp"></i>
+                </button>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <p class="dropdown-title">Contactar a:</p>
+                    <a href="https://wa.me/5493516177173?text=Hola%20Emi%2C%20quiero%20consultarte%20algo%20sobre%20la%20boda" target="_blank" class="dropdown-item">
+                        <i class="fas fa-female"></i>
+                        <span>Yda</span>
+                    </a>
+                    <a href="https://wa.me/5493571639188?text=Hola%20Yda%20y%20Emi%2C%20quiero%20consultarte%20algo%20sobre%20la%20boda" target="_blank" class="dropdown-item">
+                        <i class="fas fa-male"></i>
+                        <span>Emi (Novio)</span>
+                    </a>
+                </div>
+            </div> -->
+        </div>
+    </main>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightboxClose">
+            <i class="fas fa-times"></i>
+        </button>
+        <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    </div>
+
+    <script>
+        /* ══ APP CONTROLLER — Inicialización global ══ */
+        (function () {
+            if (window.__app) return;
+            window.__app = new AppController();
+            window.__app.init();
+
+            // Compatibilidad: expone startWeddingMusic para script.js
+            window.startWeddingMusic = function () {
+                if (window.__app) {
+                    window.__app.audioManager.play();
+                }
+            };
+        })();
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="script.js?v=2" defer></script>
+
+    <!-- ══ Magic background: inyecta pétalos + bokeh + estrellas ══ -->
+    <script>
+        (function () {
+            // Respeta accesibilidad: si el usuario prefiere menos movimiento, no generamos partículas
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                return;
+            }
+
+            // ── Pétalos flotando hacia abajo (rosa/dorado) ──
+            const petalsContainer = document.getElementById('magicPetals');
+            const petalCount = 28;
+            const petalColors = [
+                'rgba(244, 194, 194, 0.90)',  // rosa suave
+                'rgba(232, 184, 136, 0.85)',  // durazno
+                'rgba(212, 166, 77, 0.80)',   // dorado
+                'rgba(255, 245, 220, 0.90)',  // crema
+                'rgba(220, 180, 200, 0.80)',  // rosado claro
+                'rgba(240, 210, 170, 0.85)'   // champagne
+            ];
+            for (let i = 0; i < petalCount; i++) {
+                const p = document.createElement('div');
+                p.className = 'magic-petal';
+                const size = 6 + Math.random() * 14;         // 6–20px
+                const dur = 12 + Math.random() * 14;         // 12–26s
+                const del = Math.random() * -28;
+                const left = Math.random() * 100;
+                const sway = (Math.random() * 100) - 50;
+                const rot = (Math.random() * 360);
+                const color = petalColors[i % petalColors.length];
+                p.style.cssText = `
+                width:${size}px;height:${size}px;
+                left:${left}vw;
+                --p-dur:${dur}s;
+                --p-del:${del}s;
+                --p-sway:${sway}px;
+                --p-rot:${rot}deg;
+                background:${color};
+            `;
+                petalsContainer.appendChild(p);
+            }
+
+            // ── Bokeh dorado: puntos brillantes que suben y se desvanecen ──
+            const bokehContainer = document.getElementById('magicBokeh');
+            const bokehCount = 35;
+            for (let i = 0; i < bokehCount; i++) {
+                const b = document.createElement('div');
+                b.className = 'magic-bokeh-dot';
+                const size = 3 + Math.random() * 12;         // 3–15px
+                const dur = 8 + Math.random() * 12;          // 8–20s
+                const del = Math.random() * -20;
+                const left = Math.random() * 100;
+                const sway = (Math.random() * 60) - 30;
+                const goldHue = 38 + Math.random() * 20;
+                const opacity = 0.3 + Math.random() * 0.5;
+                b.style.cssText = `
+                width:${size}px;height:${size}px;
+                left:${left}vw;
+                --b-dur:${dur}s;
+                --b-del:${del}s;
+                --b-hue:${goldHue};
+                --b-op:${opacity};
+                --b-sway:${sway}px;
+            `;
+                bokehContainer.appendChild(b);
+            }
+
+            // ── Estrellitas titilando ──
+            const starsContainer = document.getElementById('magicStars');
+            const starCount = 45;
+            for (let i = 0; i < starCount; i++) {
+                const s = document.createElement('div');
+                s.className = 'magic-star';
+                const size = 1 + Math.random() * 3.5;        // 1–4.5px
+                const dur = 2 + Math.random() * 5;
+                const del = Math.random() * -10;
+                const top = Math.random() * 100;
+                const left = Math.random() * 100;
+                const hues = [200, 42, 340, 280, 45, 220, 10];
+                const hue = hues[i % hues.length];
+                s.style.cssText = `
+                width:${size}px;height:${size}px;
+                top:${top}vh;left:${left}vw;
+                --s-dur:${dur}s;
+                --s-del:${del}s;
+                --s-hue:${hue};
+            `;
+                starsContainer.appendChild(s);
+            }
+
+            // ── Destellos (glitter): parpadeos rápidos ──
+            const glitterContainer = document.createElement('div');
+            glitterContainer.className = 'magic-glitter';
+            document.getElementById('magicBokeh').parentNode.appendChild(glitterContainer);
+            const glitterCount = 30;
+            for (let i = 0; i < glitterCount; i++) {
+                const g = document.createElement('div');
+                g.className = 'magic-glitter-dot';
+                const size = 1.5 + Math.random() * 3;
+                const dur = 1.5 + Math.random() * 2.5;
+                const del = Math.random() * -8;
+                const top = Math.random() * 100;
+                const left = Math.random() * 100;
+                g.style.cssText = `
+                width:${size}px;height:${size}px;
+                top:${top}vh;left:${left}vw;
+                --g-dur:${dur}s;
+                --g-del:${del}s;
+            `;
+                glitterContainer.appendChild(g);
+            }
+
+            // ── Lentes de luz ambiental ──
+            const flarePositions = [
+                { t: '15%', l: '20%', s: '300px', d: '0s' },
+                { t: '70%', l: '80%', s: '250px', d: '-5s' },
+                { t: '40%', l: '50%', s: '200px', d: '-10s' }
+            ];
+            flarePositions.forEach(({ t, l, s, d }) => {
+                const f = document.createElement('div');
+                f.className = 'magic-flare';
+                f.style.cssText = `top:${t};left:${l};width:${s};height:${s};animation-delay:${d};`;
+                document.getElementById('magicStars').parentNode.appendChild(f);
+            });
+        })();
+    </script>
+</body>
+
+</html>
