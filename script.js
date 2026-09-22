@@ -524,16 +524,16 @@ document.addEventListener('DOMContentLoaded', () => {
     App.init();
 });
 
-/* ══ CARGA DINÁMICA DE GALERÍA ══ */
 async function cargarGaleria() {
     try {
         const response = await fetch('datos_fotos.json');
         if (!response.ok) throw new Error('No se pudo cargar el archivo JSON');
         const fotos = await response.json();
-        const contenedor = document.getElementById('dynamic-gallery');
-        if (!contenedor) return;
-        contenedor.innerHTML = '';
-        fotos.forEach(foto => {
+        const container = document.getElementById('dynamic-gallery');
+        if (!container) return;
+
+        const frag = document.createDocumentFragment();
+        fotos.forEach((foto) => {
             const item = document.createElement('div');
             item.className = 'gallery-item';
 
@@ -555,8 +555,9 @@ async function cargarGaleria() {
             overlay.innerHTML = '<i class="fas fa-expand"></i>';
             item.appendChild(overlay);
 
-            contenedor.appendChild(item);
+            frag.appendChild(item);
         });
+        container.appendChild(frag);
     } catch (error) {
         console.error('Error cargando la galería:', error);
     }
