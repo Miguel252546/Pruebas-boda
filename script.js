@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
         lightboxClose: document.getElementById('lightboxClose'),
         lightboxPrev: document.getElementById('lightboxPrev'),
         lightboxNext: document.getElementById('lightboxNext'),
-        lightboxCaption: document.getElementById('lightboxCaption'),
         whatsappBtn: document.getElementById('whatsappBtn'),
         dropdownMenu: document.getElementById('dropdownMenu'),
         heroImage: document.querySelector('.hero-image'),
@@ -136,7 +135,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const foto = this.fotos[this.index];
             DOM.lightboxImg.src = cloudSrc(foto.imageUrl, 1600);
             DOM.lightboxImg.alt = foto.name || '';
-            if (DOM.lightboxCaption) DOM.lightboxCaption.textContent = foto.name || '';
             DOM.lightbox.classList.add('active');
             document.body.style.overflow = 'hidden';
         },

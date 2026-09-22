@@ -786,7 +786,7 @@ body::after {
 }
 
 .countdown .section-title {
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
 
 .countdown-particles { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
@@ -1848,7 +1848,7 @@ body::after {
 }
 
 .vestimenta-card p {
-    color: #1a2744;
+    color: #1a4427;
     font-size: 16px;
     line-height: 1.6;
     margin: 0 0 8px 0;
@@ -2219,7 +2219,7 @@ body::after {
     .tap-hint span { font-size: 0.9rem; }
     
     .hero-names { gap: 10px; }
-    .hero-names .amp { display: none; }
+    .hero-names .amp { font-size: clamp(1.3rem, 4.5vw, 2rem); }
     
     .countdown-grid { gap: 10px; }
     .count-box { padding: 20px 15px; min-width: 70px; }
@@ -4197,6 +4197,19 @@ body::after {
     transform: translateY(-8px);
     border-color: #d4a64d;
     box-shadow: 0 20px 60px rgba(212, 166, 77, 0.25);
+}
+
+/* Tarjeta "Damas de Honor" — tratamiento en azul (refuerza el "Azul" del texto) */
+.vestimenta-card.damas {
+    background: linear-gradient(145deg, rgba(206, 236, 252, 0.94), rgba(151, 206, 235, 0.94));
+    border: 1.5px solid var(--sky-main);
+    box-shadow: 0 4px 20px var(--sky-glow);
+}
+
+.vestimenta-card.damas:hover {
+    background: linear-gradient(145deg, rgba(219, 241, 253, 0.97), rgba(165, 214, 241, 0.97));
+    border-color: var(--sky-bright);
+    box-shadow: 0 20px 60px var(--sky-glow);
 }
 
 .parent-card {
