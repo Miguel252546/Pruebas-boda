@@ -1,12 +1,217 @@
-/* ══ GALERÍA DE FOTOS — GRID (diseño previo al carrusel) ══ */
-/* La grilla la define styles.css (.gallery-grid: grid, .gallery-item, etc.).
-   Aquí solo se garantiza la visibilidad de las imágenes y un pequeño
-   colchón vertical para las sombras de las tarjetas. */
+/* ══ GALERÍA DE FOTOS — CARRUSEL ══ */
+/* Estructura: .gallery-carousel (wrapper) > [.gallery-arrow-prev] .gallery-viewport > .gallery-grid (track)
+   Los estilos base de .gallery-item (hover, overlay, sombra) siguen en styles.css. */
+
+.gallery-carousel {
+    position: relative;
+}
+
+.gallery-viewport {
+    overflow: hidden;
+    touch-action: pan-y;
+}
+
+.gallery-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0;
+    will-change: transform;
+    transition: transform 0.45s var(--ease);
+}
+
+.gallery-grid.dragging {
+    transition: none;
+}
+
+.gallery-item {
+    flex: 0 0 calc(100% / var(--cl-pages, 3));
+    padding: 0 10px;
+    aspect-ratio: 4 / 3;
+    user-select: none;
+}
+
+.gallery-item:first-child {
+    padding-left: 0;
+}
+
+.gallery-item:last-child {
+    padding-right: 0;
+}
 
 .gallery-item img {
     opacity: 1;
+    -webkit-user-drag: none;
+    user-select: none;
+    pointer-events: none;
 }
 
-.gallery .gallery-grid {
-    padding: 6px 0;
+.gallery-overlay {
+    z-index: 3;
+}
+
+.gallery-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 6;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(26, 39, 68, 0.75);
+    border: 1px solid rgba(135, 206, 235, 0.35);
+    color: var(--sky-main);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    transition: background 0.3s, transform 0.3s, opacity 0.3s;
+}
+
+.gallery-arrow:hover:not(:disabled) {
+    background: rgba(135, 206, 235, 0.25);
+}
+
+.gallery-arrow:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.gallery-arrow i {
+    font-size: 1.3rem;
+    pointer-events: none;
+}
+
+.gallery-arrow-prev {
+    left: -24px;
+}
+
+.gallery-arrow-next {
+    right: -24px;
+}
+
+.gallery-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.gallery-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1px solid rgba(135, 206, 235, 0.5);
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.3s, width 0.3s, border-radius 0.3s;
+}
+
+.gallery-dot:hover {
+    background: rgba(135, 206, 235, 0.4);
+}
+
+.gallery-dot.active {
+    background: var(--sky-main);
+    border-color: var(--sky-main);
+    width: 26px;
+    border-radius: 6px;
+}
+
+/* ══ LIGHTBOX — Navegación y caption ══ */
+/* El contenedor .lightbox y .lightbox-img ya están en styles.css. */
+
+.lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: rgba(135, 206, 235, 0.12);
+    border: 1px solid rgba(135, 206, 235, 0.25);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s, transform 0.3s;
+}
+
+.lightbox-nav:hover {
+    background: rgba(135, 206, 235, 0.28);
+}
+
+.lightbox-nav i {
+    font-size: 1.5rem;
+    pointer-events: none;
+}
+
+.lightbox-nav-prev {
+    left: 25px;
+}
+
+.lightbox-nav-next {
+    right: 25px;
+}
+
+.lightbox-caption {
+    position: absolute;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    color: rgba(255, 255, 255, 0.85);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    max-width: 70%;
+    text-align: center;
+    background: rgba(10, 22, 40, 0.6);
+    padding: 8px 16px;
+    border-radius: 20px;
+}
+
+/* ══ RESPONSIVE ══ */
+@media (max-width: 992px) {
+    .gallery-grid {
+        --cl-pages: 2;
+    }
+
+    .gallery-arrow-prev {
+        left: -14px;
+    }
+
+    .gallery-arrow-next {
+        right: -14px;
+    }
+}
+
+@media (max-width: 768px) {
+    .gallery-grid {
+        --cl-pages: 1;
+    }
+
+    .gallery-arrow-prev {
+        left: 6px;
+    }
+
+    .gallery-arrow-next {
+        right: 6px;
+    }
+
+    .lightbox-nav-prev {
+        left: 12px;
+    }
+
+    .lightbox-nav-next {
+        right: 12px;
+    }
+
+    .lightbox-caption {
+        max-width: 85%;
+        font-size: 0.85rem;
+    }
 }
