@@ -45,6 +45,13 @@ class OpeningEngine {
 
         this.state = 'READY';
 
+        // La entrada del hero se ejecuta UNA sola vez, aquí (oculta tras el overlay
+        // opaco de apertura), y NO al cerrar: evita que al hacer unlock el hero
+        // re-arranque desde opacity:0 y produzca el apagón tipo "recarga".
+        if (this.hero && !this.hero.classList.contains('animate-in')) {
+            this.hero.classList.add('animate-in');
+        }
+
         this._lockScroll();
     }
 
@@ -155,6 +162,8 @@ class OpeningEngine {
 
     _lockScroll() {
         this._savedScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+        const scrollbarWidth = this._measureScrollbar();
+        document.body.style.paddingRight = scrollbarWidth > 0 ? scrollbarWidth + 'px' : '';
         document.body.style.overflow = 'hidden';
         document.documentElement.style.overflow = 'hidden';
         if (typeof window.ontouchstart !== 'undefined' || navigator.maxTouchPoints > 0) {
@@ -163,11 +172,24 @@ class OpeningEngine {
     }
 
     _unlockScroll() {
+        document.body.style.paddingRight = '';
         document.body.style.overflow = '';
         document.documentElement.style.overflow = '';
         document.removeEventListener('touchmove', this._boundPreventTouch, { capture: true });
-        if (this._savedScrollY > 0) window.scrollTo(0, this._savedScrollY);
+        if (this._savedScrollY > 0) {
+            window.scrollTo({ top: this._savedScrollY, behavior: 'instant' });
+        }
         this._savedScrollY = -1;
+    }
+
+    _measureScrollbar() {
+        let probe = document.createElement('div');
+        probe.style.cssText = 'position:fixed; top:-9999px; left:-9999px; width:50px; height:50px; overflow:scroll; visibility:hidden;';
+        document.body.appendChild(probe);
+        const width = probe.offsetWidth - probe.clientWidth;
+        document.body.removeChild(probe);
+        probe = null;
+        return width;
     }
 
     _onPreventTouch(e) {
@@ -220,7 +242,6 @@ class OpeningEngine {
             if (this.lightLines) this.lightLines.classList.remove('active');
             if (this.opening) this.opening.style.display = 'none';
             this._unlockScroll();
-            if (this.hero) this.hero.classList.add('animate-in');
 
             this.ac.setTimeout(() => {
                 if (this.hero) {

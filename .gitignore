@@ -1,8 +1,29 @@
-# Guía local de modificaciones visuales
-GUIA_MODIFICACIONES_VISUALES.md
+# Dependencias
+node_modules/
 
-# Carpeta local de problemas
+# Entorno / secretos (nunca subir)
+.env
+.env.*
+
+# Guia local de modificaciones
+GUIA_MODIFICACIONES_VISUALES.md*
+
+# Material fuente / multimedia local (se sirve desde Cloudinary)
+Video + musica/
+
+# Utilidades y capturas de problemas
 problemas/
 
-# Configuración local de Visual Studio Code
+# Subidas del backend (multer)
+uploads/
+
+# Configuracion local de editores/herramientas
 .vscode/
+.claude/
+.idea/
+
+# Archivos temporales / de sistema
+Thumbs.db
+Desktop.ini
+*.log
+*~
