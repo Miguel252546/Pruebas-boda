@@ -14,7 +14,7 @@
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
     <link rel="preload" as="image"
         href="https://images.unsplash.com/photo-1519741497674-611481863552?w=1920&q=80" fetchpriority="high">
-    <link rel="stylesheet" href="styles.css?v=9">
+    <link rel="stylesheet" href="styles.css?v=10">
     <link rel="stylesheet" href="gallery.css?v=11">
     <!-- ══ Módulos del Opening ══ -->
     <script src="modules/event-bus.js"></script>
@@ -23,7 +23,7 @@
     <script src="modules/canvas-renderer.js"></script>
     <script src="modules/particle-engine.js"></script>
     <script src="modules/audio-manager.js"></script>
-    <script src="modules/opening-engine.js"></script>
+    <script src="modules/opening-engine.js?v=2"></script>
     <script src="modules/app-controller.js"></script>
 </head>
 
@@ -198,7 +198,7 @@
                 <p class="hero-subtitle">Estamos preparando todo para recibirte</p>
                 <div class="hero-names">
                     <span class="name">Yda</span>
-                    <span class="amp">y</span>
+                    <span class="amp">&</span>
                     <span class="name">Emi</span>
                 </div>
                 <div class="hero-date-row">
@@ -239,7 +239,7 @@
                     </p>
                     <div class="names-line">
                         <span>Yda</span>
-                        <span class="and">y</span>
+                        <span class="and">&</span>
                         <span>Emi</span>
                     </div>
                 </div>
@@ -252,7 +252,7 @@
         <section class="section countdown" id="countdown">
             <div class="countdown-particles" id="countdownParticles"></div>
             <div class="container">
-                <h2 class="section-title light">Ya falta poco para el gran día</h2>
+                <h2 class="section-title light">Ya falta poco ....</h2>
                 <div class="countdown-grid">
                     <div class="count-box">
                         <div class="count-glow"></div>
@@ -385,7 +385,7 @@
                         <h3>La Novia</h3>
                         <p>El blanco está reservado exclusivamente para la novia</p>
                     </div>
-                    <div class="vestimenta-card damas">
+                    <div class="vestimenta-card">
                         <div class="vestimenta-icon">
                             <i class="fas fa-ring"></i>
                         </div>
@@ -397,7 +397,7 @@
                             <i class="fas fa-user-tie"></i>
                         </div>
                         <h3>Damas y Caballeros</h3>
-                        <p>¡Es su momento de brillar!, queremos que lo den todo con sus
+                        <p>¡Es su momento de brillar!. Queremos que lo den todo con sus
                             mejores looks. ¡A vernos divinos!</p>
                     </div>
                 </div>
@@ -406,18 +406,35 @@
 
         <div class="section-divider" aria-hidden="true"></div>
 
-        <!-- Precio de la Tarjeta -->
-        <section id="precio-tarjeta" class="section precio-tarjeta">
+        <!-- Logística: transporte y descuento en indumentaria -->
+        <section id="logistica" class="section logistica">
             <div class="container">
-                <h2 class="section-title light">Costo de la Tarjeta</h2>
-                <div class="regalo-card">
-                    <div class="regalo-icon">
-                        <i class="fas fa-ticket-alt"></i>
+                <h2 class="section-title light">¡Pensamos en todo!</h2>
+                <div class="logistica-grid">
+                    <div class="regalo-card">
+                        <div class="regalo-icon">
+                            <i class="fas fa-bus"></i>
+                        </div>
+                        <p class="regalo-texto">
+                            ¿No tenés cómo ir? ¡Nosotros te llevamos! 🥳<br><br>
+                            Sumamos un transporte de ida y vuelta para quienes no tengan en qué moverse y no se pierdan la
+                            fiesta.<br><br>
+                            📌 <strong>Importante:</strong> Como los asientos son contados, reservá el tuyo al confirmar tu
+                            presencia.
+                        </p>
                     </div>
-                    <p class="regalo-texto">
-                        Tu presencia es lo más importante para nosotros. Para la logística del evento, el costo de la
-                        tarjeta por persona es de <strong>$120.000</strong>.
-                    </p>
+                    <div class="regalo-card">
+                        <div class="regalo-icon">
+                            <i class="fas fa-percent"></i>
+                        </div>
+                        <p class="regalo-texto">
+                            ¿Todavía no sabés qué ponerte? ¡Tranquilo, ya lo tenemos! 😎<br><br>
+                            Conseguimos un descuento con un local que alquila y vende trajes y vestidos, para que llegues
+                            impecable sin que te duela el bolsillo.<br><br>
+                            📌 <strong>Importante:</strong> [Nombre del local / contacto] — pasá por ahí, nombranos y
+                            aprovechá el descuento.
+                        </p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -687,7 +704,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
-    <script src="script.js?v=6" defer></script>
+    <script src="script.js?v=8" defer></script>
 
     <!-- ══ Magic background: inyecta pétalos + bokeh + estrellas ══ -->
     <script>

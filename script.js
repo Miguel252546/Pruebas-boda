@@ -450,7 +450,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 '.video-wrapper',
                 '.regalo-card',
                 '.regalos .regalo-card',
-                '.precio-tarjeta .regalo-card',
+                '.logistica .regalo-card',
                 '.rsvp-box',
                 '.parents-grid',
                 '.historia-timeline'
@@ -589,6 +589,11 @@ function cloudSrc(url, width) {
     return url.replace('/image/upload/', '/image/upload/f_auto,q_auto,w_' + width + '/');
 }
 
+function cloudThumb(url) {
+    if (!url || url.indexOf('/image/upload/') === -1) return url;
+    return url.replace('/image/upload/', '/image/upload/f_auto,q_auto,w_800,c_fill,g_faces,ar_4:3/');
+}
+
 // =========================================================================
 // CARRUSEL DE GALERÍA — Viewport/Track + swipe/drag + dots
 // =========================================================================
@@ -641,7 +646,7 @@ const GalleryCarousel = {
             item.className = 'gallery-item';
 
             const img = document.createElement('img');
-            img.src = cloudSrc(foto.imageUrl, 800);
+            img.src = cloudThumb(foto.imageUrl);
             img.alt = foto.name;
             img.loading = 'lazy';
             img.decoding = 'async';

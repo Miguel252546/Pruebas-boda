@@ -18,6 +18,8 @@ class OpeningEngine {
         this.state = 'IDLE';
         this._boundPokeballClick = this._onPokeballClick.bind(this);
         this._boundConfirmClick = this._onConfirmClick.bind(this);
+        this._boundPreventTouch = this._onPreventTouch.bind(this);
+        this._savedScrollY = -1;
     }
 
     init() {
@@ -42,6 +44,8 @@ class OpeningEngine {
         }
 
         this.state = 'READY';
+
+        this._lockScroll();
     }
 
     destroy() {
@@ -149,6 +153,27 @@ class OpeningEngine {
         }
     }
 
+    _lockScroll() {
+        this._savedScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+        document.body.style.overflow = 'hidden';
+        document.documentElement.style.overflow = 'hidden';
+        if (typeof window.ontouchstart !== 'undefined' || navigator.maxTouchPoints > 0) {
+            document.addEventListener('touchmove', this._boundPreventTouch, { capture: true, passive: false });
+        }
+    }
+
+    _unlockScroll() {
+        document.body.style.overflow = '';
+        document.documentElement.style.overflow = '';
+        document.removeEventListener('touchmove', this._boundPreventTouch, { capture: true });
+        if (this._savedScrollY > 0) window.scrollTo(0, this._savedScrollY);
+        this._savedScrollY = -1;
+    }
+
+    _onPreventTouch(e) {
+        e.preventDefault();
+    }
+
     _onPokeballClick() {
         if (this.state !== 'READY') return;
         this.state = 'POKEBALL_OPENING';
@@ -194,6 +219,7 @@ class OpeningEngine {
             if (this.flash) this.flash.classList.remove('go');
             if (this.lightLines) this.lightLines.classList.remove('active');
             if (this.opening) this.opening.style.display = 'none';
+            this._unlockScroll();
             if (this.hero) this.hero.classList.add('animate-in');
 
             this.ac.setTimeout(() => {
