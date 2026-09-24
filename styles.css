@@ -604,6 +604,7 @@ body::after {
     font-size: clamp(2rem, 5vw, 3rem);
     font-style: italic;
     color: var(--sky-main);
+    margin-right: -0.12em;
 }
 
 .hero-date-row { display: flex; align-items: center; justify-content: center; gap: 25px; margin-bottom: 35px; }
