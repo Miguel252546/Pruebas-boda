@@ -28,6 +28,7 @@
     padding: 0 10px;
     aspect-ratio: 4 / 3;
     user-select: none;
+    touch-action: manipulation;
 }
 
 .gallery-item:first-child {
@@ -43,6 +44,7 @@
     -webkit-user-drag: none;
     user-select: none;
     pointer-events: none;
+    touch-action: manipulation;
 }
 
 .gallery-overlay {

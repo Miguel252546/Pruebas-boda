@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // =========================================================================
     const GalleryManager = {
         index: 0,
+        _touchGuardUntil: 0,
         get fotos() { return window.__galleryFotos || []; },
         get items() { return window.__galleryItems || []; },
         init() {
@@ -86,11 +87,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             container.addEventListener('click', (e) => {
                 if (GalleryCarousel._suppressClick) return;
+                if (Date.now() - this._touchGuardUntil < 400) return;
                 const item = e.target.closest('.gallery-item');
                 if (!item) return;
                 const idx = this.items.indexOf(item);
                 if (idx !== -1) this.open(idx);
             });
+
+            this._bindTapOpen(container);
 
             if (DOM.lightboxClose) {
                 DOM.lightboxClose.addEventListener('click', () => this.close());
@@ -125,6 +129,38 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
             this._bindSwipe();
+        },
+        _bindTapOpen(container) {
+            let x = 0, y = 0, t = 0, tracking = false;
+            const itemOf = (el) => (el && el.closest) ? el.closest('.gallery-item') : null;
+            container.addEventListener('touchstart', (e) => {
+                const touch = e.changedTouches[0];
+                if (!touch || !itemOf(e.target)) return;
+                x = touch.clientX;
+                y = touch.clientY;
+                t = Date.now();
+                tracking = true;
+            }, { passive: true });
+            container.addEventListener('touchmove', (e) => {
+                if (!tracking) return;
+                const touch = e.changedTouches[0];
+                if (touch && (Math.abs(touch.clientX - x) > 10 || Math.abs(touch.clientY - y) > 10)) tracking = false;
+            }, { passive: true });
+            container.addEventListener('touchend', (e) => {
+                if (!tracking) return;
+                tracking = false;
+                if (GalleryCarousel._suppressClick) return;
+                if (Date.now() - t > 500) return;
+                const touch = e.changedTouches[0];
+                if (!touch) return;
+                if (Math.abs(touch.clientX - x) > 12 || Math.abs(touch.clientY - y) > 12) return;
+                const item = itemOf(e.target);
+                if (!item) return;
+                const idx = this.items.indexOf(item);
+                if (idx === -1) return;
+                this._touchGuardUntil = Date.now();
+                this.open(idx);
+            }, { passive: true });
         },
         isOpen() {
             return !!(DOM.lightbox && DOM.lightbox.classList.contains('active'));
@@ -745,15 +781,15 @@ const GalleryCarousel = {
         vp.addEventListener('pointerdown', (e) => {
             if (e.pointerType === 'mouse' && e.button !== 0) return;
             this._drag = { id: e.pointerId, x: e.clientX, page: this.page, active: false };
-            if (vp.setPointerCapture) {
-                try { vp.setPointerCapture(e.pointerId); } catch (err) { /* sin captura */ }
-            }
         });
         vp.addEventListener('pointermove', (e) => {
             if (!this._drag || e.pointerId !== this._drag.id) return;
             const dx = e.clientX - this._drag.x;
             if (!this._drag.active && Math.abs(dx) > 6) {
                 this._drag.active = true;
+                if (vp.setPointerCapture) {
+                    try { vp.setPointerCapture(e.pointerId); } catch (err) { /* sin captura */ }
+                }
                 if (this.track) this.track.classList.add('dragging');
             }
             if (!this._drag.active) return;
