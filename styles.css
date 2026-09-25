@@ -75,6 +75,7 @@ body::after {
     padding: 60px 0;
     position: relative;
     overflow-x: hidden;
+    overflow-y: clip;
 }
 
 .section:has(+ .section-divider) {
